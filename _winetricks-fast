@@ -1,0 +1,24 @@
+#compdef winetricks-fast
+
+local verbs=(
+    'andale'\
+    'arial'\
+    'comicsans'\
+    'courier'\
+    'georgia'\
+    'impact'\
+    'times'\
+    'trebuchet'\
+    'verdana'\
+    'webdings'\
+    'corefonts'\
+    'sourcehansans'\
+    'fakechinese'\
+    'fakejapanese'\
+    'fakekorean'\
+    'unifont'\
+    'ipamona'\
+    'takao'\
+    'vlgothic')
+
+_arguments "*:verbs:((${verbs}))"
