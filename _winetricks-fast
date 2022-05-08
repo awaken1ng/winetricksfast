@@ -1,6 +1,16 @@
 #compdef winetricks-fast
 
 local verbs=(
+    'baekmuk'\
+    'cjkfonts'\
+    'calibri'\
+    'cambria'\
+    'candara'\
+    'consolas'\
+    'constantia'\
+    'corbel'\
+    'meiryo'\
+    'pptfonts'\
     'andale'\
     'arial'\
     'comicsans'\
@@ -12,13 +22,25 @@ local verbs=(
     'verdana'\
     'webdings'\
     'corefonts'\
-    'sourcehansans'\
+    'droid'\
+    'eufonts'\
     'fakechinese'\
     'fakejapanese'\
+    'fakejapanese_ipamona'\
+    'fakejapanese_vlgothic'\
     'fakekorean'\
-    'unifont'\
     'ipamona'\
+    'liberation'\
+    'lucida'\
+    'opensymbol'\
+    'sourcehansans'\
+    'tahoma'\
     'takao'\
-    'vlgothic')
+    'uff'\
+    'vlgothic'\
+    'wenquanyi'\
+    'wenquanyizenhei'\
+    'unifont'\
+    'allfonts')
 
 _arguments "*:verbs:((${verbs}))"

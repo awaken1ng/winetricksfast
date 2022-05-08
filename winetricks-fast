@@ -7,7 +7,281 @@ WINETRICKS_LOG="$WINEPREFIX/winetricks.log"
 
 # region: verbs
 
-# region: verbs/corefonts
+# region: verbs/fonts
+
+install_baekmuk() {
+	# See http://kldp.net/projects/baekmuk
+
+	verb="baekmuk"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	# Need to download from Debian as the project page has unique captcha tokens per visitor
+	download_and_cache "$verb" "https://deb.debian.org/debian/pool/main/f/fonts-baekmuk/fonts-baekmuk_2.2.orig.tar.gz" "08ab7dffb55d5887cc942ce370f5e33b756a55fbb4eaf0b90f244070e8d51882"
+
+	tar --ungzip --extract --file "$WINETRICKS_CACHE/$verb/fonts-baekmuk_2.2.orig.tar.gz" --directory "$WINE_TEMP" --wildcards "baekmuk-ttf-2.2/ttf/*.ttf"
+	mv "$WINE_TEMP"/baekmuk-ttf-2.2/ttf/*.ttf "$WINE_FONTS"
+	rm -rf "$WINE_TEMP/baekmuk-ttf-2.2"
+
+	stage_font_registration <<-EOF
+	"Baekmuk Batang (TrueType)"="batang.ttf"
+	"Baekmuk Gulim (TrueType)"="gulim.ttf"
+	"Baekmuk Dotum (TrueType)"="dotum.ttf"
+	"Baekmuk Headline (TrueType)"="hline.ttf"
+	EOF
+
+	stage_installed "$verb"
+}
+
+install_cjkfonts() {
+	echo "Installing cjkfonts"
+
+	install_fakechinese
+	install_fakejapanese
+	install_fakekorean
+	install_unifont
+
+	verb="cjkfonts"
+	if ! is_verb_installed "$verb"; then
+		stage_installed "$verb"
+	fi
+}
+
+# region: verbs/fonts/pptfonts
+
+install_calibri() {
+	verb="calibri"
+	if is_verb_installed $verb; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	if test "$1" != "don't extract"; then
+		_extract_ppviewer
+	fi
+
+	cabextract "$WINE_TEMP/ppviewer.cab" --filter "CALIBRI*.TTC" --lowercase --directory "$WINE_FONTS"
+
+	stage_font_registration <<-EOF
+	"Calibri (TrueType)"="calibri.ttf"
+	"Calibri Bold (TrueType)"="calibrib.ttf"
+	"Calibri Italic (TrueType)"="calibrii.ttf"
+	"Calibri Bold Italic (TrueType)"="calibriz.ttf"
+	EOF
+
+	if test "$1" != "don't extract"; then
+		rm "$WINE_TEMP/ppviewer.cab"
+	fi
+
+	stage_installed "$verb"
+}
+
+install_cambria() {
+	verb="cambria"
+	if is_verb_installed $verb; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	if test "$1" != "don't extract"; then
+		_extract_ppviewer
+	fi
+
+	cabextract "$WINE_TEMP/ppviewer.cab" --filter "CAMBRIA*.TTC" --lowercase --directory "$WINE_FONTS"
+
+	stage_font_registration <<-EOF
+	"Cambria & Cambria Math (TrueType)"="cambria.ttc"
+	"Cambria Bold (TrueType)"="cambriab.ttf"
+	"Cambria Italic (TrueType)"="cambriai.ttf"
+	"Cambria Bold Italic (TrueType)"="cambriaz.ttf"
+	EOF
+
+	if test "$1" != "don't extract"; then
+		rm "$WINE_TEMP/ppviewer.cab"
+	fi
+
+	stage_installed "$verb"
+}
+
+install_candara() {
+	verb="candara"
+	if is_verb_installed $verb; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	if test "$1" != "don't extract"; then
+		_extract_ppviewer
+	fi
+
+	cabextract "$WINE_TEMP/ppviewer.cab" --filter "CANDARA*.TTC" --lowercase --directory "$WINE_FONTS"
+
+	stage_font_registration <<-EOF
+	"Candara (TrueType)"="candara.ttf"
+	"Candara Bold (TrueType)"="candarab.ttf"
+	"Candara Italic (TrueType)"="candarai.ttf"
+	"Candara Bold Italic (TrueType)"="candaraz.ttf"
+	EOF
+
+	if test "$1" != "don't extract"; then
+		rm "$WINE_TEMP/ppviewer.cab"
+	fi
+
+	stage_installed "$verb"
+}
+
+install_consolas() {
+	verb="consolas"
+	if is_verb_installed $verb; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	if test "$1" != "don't extract"; then
+		_extract_ppviewer
+	fi
+
+	cabextract "$WINE_TEMP/ppviewer.cab" --filter "CONSOLA*.TTC" --lowercase --directory "$WINE_FONTS"
+
+	stage_font_registration <<-EOF
+	"Consolas (TrueType)"="consola.ttf"
+	"Consolas Bold (TrueType)"="consolab.ttf"
+	"Consolas Italic (TrueType)"="consolai.ttf"
+	"Consolas Bold Italic (TrueType)"="consolaz.ttf"
+	EOF
+
+	if test "$1" != "don't extract"; then
+		rm "$WINE_TEMP/ppviewer.cab"
+	fi
+
+	stage_installed "$verb"
+}
+
+install_constantia() {
+	verb="constantia"
+	if is_verb_installed $verb; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	if test "$1" != "don't extract"; then
+		_extract_ppviewer
+	fi
+
+	cabextract "$WINE_TEMP/ppviewer.cab" --filter "CONSTAN.TTC" --lowercase --directory "$WINE_FONTS"
+
+	stage_font_registration <<-EOF
+	"Constantia (TrueType)"="constan.ttf"
+	"Constantia Bold (TrueType)"="constanb.ttf"
+	"Constantia Italic (TrueType)"="constani.ttf"
+	"Constantia Bold Italic (TrueType)"="constanz.ttf"
+	EOF
+
+	if test "$1" != "don't extract"; then
+		rm "$WINE_TEMP/ppviewer.cab"
+	fi
+
+	stage_installed "$verb"
+}
+
+install_corbel() {
+	verb="corbel"
+	if is_verb_installed $verb; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	if test "$1" != "don't extract"; then
+		_extract_ppviewer
+	fi
+
+	cabextract "$WINE_TEMP/ppviewer.cab" --filter "CORBEL*.TTC" --lowercase --directory "$WINE_FONTS"
+
+	stage_font_registration <<-EOF
+	"Corbel (TrueType)"="corbel.ttf"
+	"Corbel Bold (TrueType)"="corbelb.ttf"
+	"Corbel Italic (TrueType)"="corbeli.ttf"
+	"Corbel Bold Italic (TrueType)"="corbelz.ttf"
+	EOF
+
+	if test "$1" != "don't extract"; then
+		rm "$WINE_TEMP/ppviewer.cab"
+	fi
+
+	stage_installed "$verb"
+}
+
+install_meiryo() {
+	verb="meiryo"
+	conflicts="fakejapanese_vlgothic"
+
+	if is_verb_installed "$conflicts"; then
+		echo "!! $verb conflicts with $conflicts"
+		return
+	fi
+
+	if is_verb_installed $verb; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	if test "$1" != "don't extract"; then
+		_extract_ppviewer
+	fi
+
+	cabextract "$WINE_TEMP/ppviewer.cab" --filter "MEIRYO*.TTC" --lowercase --directory "$WINE_FONTS"
+
+	stage_font_registration <<-EOF
+	"Meiryo & Meiryo Italic & Meiryo UI & Meiryo UI Italic (TrueType)"="meiryo.ttc"
+	"Meiryo Bold & Meiryo Bold Italic & Meiryo UI Bold & Meiryo UI Bold Italic (TrueType)"="meiryob.ttc"
+	EOF
+
+	if test "$1" != "don't extract"; then
+		rm "$WINE_TEMP/ppviewer.cab"
+	fi
+
+	stage_installed "$verb"
+}
+
+install_pptfonts() {
+	_extract_ppviewer
+
+	echo ":: Installing pptfonts"
+
+	install_calibri "don't extract"
+	install_cambria "don't extract"
+	install_candara "don't extract"
+	install_consolas "don't extract"
+	install_constantia "don't extract"
+	install_corbel "don't extract"
+	install_meiryo "don't extract"
+
+	rm "$WINE_TEMP/ppviewer.cab"
+
+	verb="pptfonts"
+	if ! is_verb_installed "$verb" && test "$1" != "don't mark as installed"; then
+		stage_installed "$verb"
+	fi
+}
+
+_extract_ppviewer() {
+	download_and_cache "PowerPointViewer" "https://web.archive.org/web/20171225132744if_/https://download.microsoft.com/download/E/6/7/E675FFFC-2A6D-4AB0-B3EB-27C9F8C8F696/PowerPointViewer.exe" "249473568eba7a1e4f95498acba594e0f42e6581add4dead70c1dfb908a09423"
+	cabextract "$WINETRICKS_CACHE/PowerPointViewer/PowerPointViewer.exe" --filter "ppviewer.cab" --directory "$WINE_TEMP"
+}
+
+# endregion: verbs/fonts/pptfonts
+
+# region: verbs/fonts/corefonts
 
 install_andale() {
 	verb="andale"
@@ -15,10 +289,11 @@ install_andale() {
 		return
 	fi
 
+	echo ":: Installing $verb"
+
 	download_and_cache "corefonts" "https://mirrors.kernel.org/gentoo/distfiles/andale32.exe" "0524fe42951adc3a7eb870e32f0920313c71f170c859b5f770d82b4ee111e970"
 
-	echo ":: Extracting Andale Mono"
-	cabextract "$WINETRICKS_CACHE/corefonts/andale32.exe" -F "AndaleMo.TTF" -L -d "$WINE_FONTS"
+	cabextract "$WINETRICKS_CACHE/corefonts/andale32.exe" --filter "AndaleMo.TTF" --lowercase --directory "$WINE_FONTS"
 
 	stage_font_registration <<-EOF
 	"Andale Mono (TrueType)"="andalemo.ttf"
@@ -33,12 +308,13 @@ install_arial() {
 		return
 	fi
 
+	echo ":: Installing $verb"
+
 	download_and_cache "corefonts" "https://mirrors.kernel.org/gentoo/distfiles/arial32.exe" 85297a4d146e9c87ac6f74822734bdee5f4b2a722d7eaa584b7f2cbf76f478f6
 	download_and_cache "corefonts" "https://mirrors.kernel.org/gentoo/distfiles/arialb32.exe" a425f0ffb6a1a5ede5b979ed6177f4f4f4fdef6ae7c302a7b7720ef332fec0a8
 
-	echo ":: Extracting Arial fonts"
-	cabextract "$WINETRICKS_CACHE/corefonts/arial32.exe" -F "Arial*" -L -d "$WINE_FONTS"
-	cabextract "$WINETRICKS_CACHE/corefonts/arialb32.exe" -F "AriBlk.TTF" -L -d "$WINE_FONTS"
+	cabextract "$WINETRICKS_CACHE/corefonts/arial32.exe" --filter "Arial*" --lowercase --directory "$WINE_FONTS"
+	cabextract "$WINETRICKS_CACHE/corefonts/arialb32.exe" --filter "AriBlk.TTF" --lowercase --directory "$WINE_FONTS"
 
 	stage_font_registration <<-EOF
 	"Arial Bold (TrueType)"="arialbd.ttf"
@@ -57,10 +333,11 @@ install_comicsans() {
 		return
 	fi
 
+	echo ":: Installing $verb"
+
 	download_and_cache "corefonts" "https://mirrors.kernel.org/gentoo/distfiles/comic32.exe" "9c6df3feefde26d4e41d4a4fe5db2a89f9123a772594d7f59afd062625cd204e"
 
-	echo ":: Extracting Comic Sans fonts"
-	cabextract "$WINETRICKS_CACHE/corefonts/comic32.exe" -F "Comic*" -L -d "$WINE_FONTS"
+	cabextract "$WINETRICKS_CACHE/corefonts/comic32.exe" --filter "Comic*" --lowercase --directory "$WINE_FONTS"
 
 	stage_font_registration <<-EOF
 	"Comic Sans MS Bold (TrueType)"="comicbd.ttf"
@@ -76,10 +353,11 @@ install_courier() {
 		return
 	fi
 
+	echo ":: Installing $verb"
+
 	download_and_cache "corefonts" "https://mirrors.kernel.org/gentoo/distfiles/courie32.exe" "bb511d861655dde879ae552eb86b134d6fae67cb58502e6ff73ec5d9151f3384"
 
-	echo ":: Extracting Courier fonts"
-	cabextract "$WINETRICKS_CACHE/corefonts/courie32.exe" -F "cour*" -d "$WINE_FONTS"
+	cabextract "$WINETRICKS_CACHE/corefonts/courie32.exe" --filter "cour*" --directory "$WINE_FONTS"
 
 	stage_font_registration <<-EOF
 	"Courier New Bold (TrueType)"="courbd.ttf"
@@ -97,10 +375,11 @@ install_georgia() {
 		return
 	fi
 
+	echo ":: Installing $verb"
+
 	download_and_cache "corefonts" "https://mirrors.kernel.org/gentoo/distfiles/georgi32.exe" "2c2c7dcda6606ea5cf08918fb7cd3f3359e9e84338dc690013f20cd42e930301"
 
-	echo ":: Extracting Georgia fonts"
-	cabextract "$WINETRICKS_CACHE/corefonts/georgi32.exe" -F "Georgia*" -L -d "$WINE_FONTS"
+	cabextract "$WINETRICKS_CACHE/corefonts/georgi32.exe" --filter "Georgia*" --lowercase --directory "$WINE_FONTS"
 
 	stage_font_registration <<-EOF
 	"Georgia Bold (TrueType)"="georgiab.ttf"
@@ -118,10 +397,11 @@ install_impact() {
 		return
 	fi
 
+	echo ":: Installing $verb"
+
 	download_and_cache "corefonts" "https://mirrors.kernel.org/gentoo/distfiles/impact32.exe" "6061ef3b7401d9642f5dfdb5f2b376aa14663f6275e60a51207ad4facf2fccfb"
 
-	echo ":: Extracting Impact"
-	cabextract "$WINETRICKS_CACHE/corefonts/impact32.exe" -F "Impact.TTF" -L -d "$WINE_FONTS"
+	cabextract "$WINETRICKS_CACHE/corefonts/impact32.exe" --filter "Impact.TTF" --lowercase --directory "$WINE_FONTS"
 
 	stage_font_registration <<-EOF
 	"Impact (TrueType)"="impact.ttf"
@@ -136,10 +416,11 @@ install_times() {
 		return
 	fi
 
+	echo ":: Installing $verb"
+
 	download_and_cache "corefonts" "https://mirrors.kernel.org/gentoo/distfiles/times32.exe" "db56595ec6ef5d3de5c24994f001f03b2a13e37cee27bc25c58f6f43e8f807ab"
 
-	echo ":: Extracting Times New Roman fonts"
-	cabextract "$WINETRICKS_CACHE/corefonts/times32.exe" -F "Times*" -L -d "$WINE_FONTS"
+	cabextract "$WINETRICKS_CACHE/corefonts/times32.exe" --filter "Times*" --lowercase --directory "$WINE_FONTS"
 
 	stage_font_registration <<-EOF
 	"Times New Roman Bold (TrueType)"="timesbd.ttf"
@@ -157,10 +438,11 @@ install_trebuchet() {
 		return
 	fi
 
+	echo ":: Installing $verb"
+
 	download_and_cache "corefonts" "https://mirrors.kernel.org/gentoo/distfiles/trebuc32.exe" "5a690d9bb8510be1b8b4fe49f1f2319651fe51bbe54775ddddd8ef0bd07fdac9"
 
-	echo ":: Extracting Trebuchet fonts"
-	cabextract "$WINETRICKS_CACHE/corefonts/trebuc32.exe" -F "trebuc*" -L -d "$WINE_FONTS"
+	cabextract "$WINETRICKS_CACHE/corefonts/trebuc32.exe" --filter "trebuc*" --lowercase --directory "$WINE_FONTS"
 
 	stage_font_registration <<-EOF
 	"Trebuchet MS Bold (TrueType)"="trebucbd.ttf"
@@ -178,10 +460,11 @@ install_verdana() {
 		return
 	fi
 
+	echo ":: Installing $verb"
+
 	download_and_cache "corefonts" "https://mirrors.kernel.org/gentoo/distfiles/verdan32.exe" "c1cb61255e363166794e47664e2f21af8e3a26cb6346eb8d2ae2fa85dd5aad96"
 
-	echo ":: Extracting Verdana fonts"
-	cabextract "$WINETRICKS_CACHE/corefonts/verdan32.exe" -F "Verdana*" -L -d "$WINE_FONTS"
+	cabextract "$WINETRICKS_CACHE/corefonts/verdan32.exe" --filter "Verdana*" --lowercase --directory "$WINE_FONTS"
 
 	stage_font_registration <<-EOF
 	"Verdana Bold (TrueType)"="verdanab.ttf"
@@ -199,10 +482,11 @@ install_webdings() {
 		return
 	fi
 
+	echo ":: Installing $verb"
+
 	download_and_cache "corefonts" "https://mirrors.kernel.org/gentoo/distfiles/webdin32.exe" "64595b5abc1080fba8610c5c34fab5863408e806aafe84653ca8575bed17d75a"
 
-	echo ":: Extracting Webdings"
-	cabextract "$WINETRICKS_CACHE/corefonts/webdin32.exe" -F "Webdings.TTF" -L -d "$WINE_FONTS"
+	cabextract "$WINETRICKS_CACHE/corefonts/webdin32.exe" --filter "Webdings.TTF" --lowercase --directory "$WINE_FONTS"
 
 	stage_font_registration <<-EOF
 	"Webdings (TrueType)"="webdings.ttf"
@@ -212,6 +496,8 @@ install_webdings() {
 }
 
 install_corefonts() {
+	echo ":: Installing corefonts"
+
 	install_andale
 	install_arial
 	install_comicsans
@@ -232,13 +518,388 @@ install_corefonts() {
 
 # endregion: verbs/corefonts
 
-# region: verbs/cjk
+install_droid() {
+	verb="droid"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	download_and_cache "$verb" "https://github.com/android/platform_frameworks_base/blob/feef9887e8f8eb6f64fc1b4552c02efb5755cdc1/data/fonts/DroidSans-Bold.ttf?raw=true"        "2f529a3e60c007979d95d29794c3660694217fb882429fb33919d2245fe969e9" "DroidSans-Bold.ttf"
+	download_and_cache "$verb" "https://github.com/android/platform_frameworks_base/blob/feef9887e8f8eb6f64fc1b4552c02efb5755cdc1/data/fonts/DroidSansFallback.ttf?raw=true"     "05d71b179ef97b82cf1bb91cef290c600a510f77f39b4964359e3ef88378c79d" "DroidSansFallback.ttf"
+	download_and_cache "$verb" "https://github.com/android/platform_frameworks_base/blob/feef9887e8f8eb6f64fc1b4552c02efb5755cdc1/data/fonts/DroidSansJapanese.ttf?raw=true"     "935867c21b8484c959170e62879460ae9363eae91f9b35e4519d24080e2eac30" "DroidSansJapanese.ttf"
+	download_and_cache "$verb" "https://github.com/android/platform_frameworks_base/blob/feef9887e8f8eb6f64fc1b4552c02efb5755cdc1/data/fonts/DroidSansMono.ttf?raw=true"         "12b552de765dc1265d64f9f5566649930dde4dba07da0251d9f92801e70a1047" "DroidSansMono.ttf"
+	download_and_cache "$verb" "https://github.com/android/platform_frameworks_base/blob/feef9887e8f8eb6f64fc1b4552c02efb5755cdc1/data/fonts/DroidSans.ttf?raw=true"             "f51b88945f4c1b236f44b8d55a2d304316869127e95248c435c23f1e4142a7db" "DroidSans.ttf"
+	download_and_cache "$verb" "https://github.com/android/platform_frameworks_base/blob/feef9887e8f8eb6f64fc1b4552c02efb5755cdc1/data/fonts/DroidSerif-BoldItalic.ttf?raw=true" "3fdf15b911c04317e5881ae1e4b9faefcdc4bf4cfb60223597d5c9455c3e4156" "DroidSerif-BoldItalic.ttf"
+	download_and_cache "$verb" "https://github.com/android/platform_frameworks_base/blob/feef9887e8f8eb6f64fc1b4552c02efb5755cdc1/data/fonts/DroidSerif-Bold.ttf?raw=true"       "d28533eed8368f047eb5f57a88a91ba2ffc8b69a2dec5e50fe3f0c11ae3f4d8e" "DroidSerif-Bold.ttf"
+	download_and_cache "$verb" "https://github.com/android/platform_frameworks_base/blob/feef9887e8f8eb6f64fc1b4552c02efb5755cdc1/data/fonts/DroidSerif-Italic.ttf?raw=true"     "8a55a4823886234792991dd304dfa1fa120ae99483ec6c2255597d7d913b9a55" "DroidSerif-Italic.ttf"
+	download_and_cache "$verb" "https://github.com/android/platform_frameworks_base/blob/feef9887e8f8eb6f64fc1b4552c02efb5755cdc1/data/fonts/DroidSerif-Regular.ttf?raw=true"    "22aea9471bea5bce1ec3bf7136c84f075b3d11cf09dffdc3dba05e570094cbde" "DroidSerif-Regular.ttf"
+
+	cp "$WINETRICKS_CACHE/$verb/DroidSans-Bold.ttf"        "$WINE_FONTS/droidsans-bold.ttf"
+	cp "$WINETRICKS_CACHE/$verb/DroidSansFallback.ttf"     "$WINE_FONTS/droidsansfallback.ttf"
+	cp "$WINETRICKS_CACHE/$verb/DroidSansJapanese.ttf"     "$WINE_FONTS/droidsansjapanese.ttf"
+	cp "$WINETRICKS_CACHE/$verb/DroidSansMono.ttf"         "$WINE_FONTS/droidsansmono.ttf"
+	cp "$WINETRICKS_CACHE/$verb/DroidSans.ttf"             "$WINE_FONTS/droidsans.ttf"
+	cp "$WINETRICKS_CACHE/$verb/DroidSerif-BoldItalic.ttf" "$WINE_FONTS/droidserif-bolditalic.ttf"
+	cp "$WINETRICKS_CACHE/$verb/DroidSerif-Bold.ttf"       "$WINE_FONTS/droidserif-bold.ttf"
+	cp "$WINETRICKS_CACHE/$verb/DroidSerif-Italic.ttf"     "$WINE_FONTS/droidserif-italic.ttf"
+	cp "$WINETRICKS_CACHE/$verb/DroidSerif-Regular.ttf"    "$WINE_FONTS/droidserif-regular.ttf"
+
+	stage_font_registration <<-EOF
+	"Droid Sans Bold (TrueType)"="droidsans-bold.ttf"
+	"Droid Sans Fallback (TrueType)"="droidsansfallback.ttf"
+	"Droid Sans Japanese (TrueType)"="droidsansjapanese.ttf"
+	"Droid Sans Mono (TrueType)"="droidsansmono.ttf"
+	"Droid Sans (TrueType)"="droidsans.ttf"
+	"Droid Serif Bold Italic (TrueType)"="droidserif-bolditalic.ttf"
+	"Droid Serif Bold (TrueType)"="droidserif-bold.ttf"
+	"Droid Serif Italic (TrueType)"="droidserif-italic.ttf"
+	"Droid Serif (TrueType)"="droidserif-regular.ttf"
+	EOF
+
+	stage_installed "$verb"
+}
+
+install_eufonts() {
+	verb="eufonts"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	# https://www.microsoft.com/en-us/download/details.aspx?id=16083
+	# Previously at https://download.microsoft.com/download/a/1/8/a180e21e-9c2b-4b54-9c32-bf7fd7429970/EUupdate.EXE
+	# 2020/09/11: https://sourceforge.net/projects/mscorefonts2/files/cabs/EUupdate.EXE
+	download_and_cache "$verb" "https://sourceforge.net/projects/mscorefonts2/files/cabs/EUupdate.EXE" 464dd2cd5f09f489f9ac86ea7790b7b8548fc4e46d9f889b68d2cdce47e09ea8
+
+	cabextract "$WINETRICKS_CACHE/$verb/EUupdate.EXE" --filter "*.ttf" --lowercase --directory "${WINE_FONTS}"
+
+	stage_font_registration <<-EOF
+	"Arial Bold (TrueType)"="arialbd.ttf"
+	"Arial Bold Italic (TrueType)"="arialbi.ttf"
+	"Arial Italic (TrueType)"="ariali.ttf"
+	"Arial (TrueType)"="arial.ttf"
+	"Times New Roman Bold (TrueType)"="timesbd.ttf"
+	"Times New Roman Bold Italic (TrueType)"="timesbi.ttf"
+	"Times New Roman Italic (TrueType)"="timesi.ttf"
+	"Times New Roman (TrueType)"="times.ttf"
+	"Trebuchet MS Bold (TrueType)"="trebucbd.ttf"
+	"Trebuchet MS Bold Italic (TrueType)"="trebucbi.ttf"
+	"Trebuchet MS Italic (TrueType)"="trebucit.ttf"
+	"Trebuchet MS (TrueType)"="trebuc.ttf"
+	"Verdana Bold (TrueType)"="verdanab.ttf"
+	"Verdana Italian (TrueType)"="verdanai.ttf"
+	"Verdana (TrueType)"="verdana.ttf"
+	"Verdana Bold Italic (TrueType)"="verdanaz.ttf"
+	EOF
+
+	stage_installed "$verb"
+}
+
+install_fakechinese() {
+	verb="fakechinese"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	install_sourcehansans
+
+	# https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_fonts
+	stage_font_replacement <<-EOF
+	"Dengxian"="Source Han Sans SC"
+	"FangSong"="Source Han Sans SC"
+	"KaiTi"="Source Han Sans SC"
+	"Microsoft YaHei"="Source Han Sans SC"
+	"Microsoft YaHei UI"="Source Han Sans SC"
+	"NSimSun"="Source Han Sans SC"
+	"SimHei"="Source Han Sans SC"
+	"SimKai"="Source Han Sans SC"
+	"SimSun"="Source Han Sans SC"
+	"SimSun-ExtB"="Source Han Sans SC"
+	"DFKai-SB"="Source Han Sans TC"
+	"Microsoft JhengHei"="Source Han Sans TC"
+	"Microsoft JhengHei UI"="Source Han Sans TC"
+	"MingLiU"="Source Han Sans TC"
+	"PMingLiU"="Source Han Sans TC"
+	"MingLiU-ExtB"="Source Han Sans TC"
+	"PMingLiU-ExtB"="Source Han Sans TC"
+	EOF
+
+	stage_installed "$verb"
+}
+
+install_fakejapanese() {
+	verb="fakejapanese"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	install_sourcehansans
+
+	# https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_fonts
+	stage_font_replacement <<-EOF
+	"Meiryo"="Source Han Sans"
+	"Meiryo UI"="Source Han Sans"
+	"MS Gothic"="Source Han Sans"
+	"MS Mincho"="Source Han Sans"
+	"MS PGothic"="Source Han Sans"
+	"MS PMincho"="Source Han Sans"
+	"MS UI Gothic"="Source Han Sans"
+	"UD Digi KyoKasho N-R"="Source Han Sans"
+	"UD Digi KyoKasho NK-R"="Source Han Sans"
+	"UD Digi KyoKasho NP-R"="Source Han Sans"
+	"Yu Gothic"="Source Han Sans"
+	"Yu Gothic UI"="Source Han Sans"
+	"Yu Mincho"="Source Han Sans"
+	"メイリオ"="Source Han Sans"
+	"ＭＳ ゴシック"="Source Han Sans"
+	"ＭＳ 明朝"="Source Han Sans"
+	"ＭＳ Ｐゴシック"="Source Han Sans"
+	"ＭＳ Ｐ明朝"="Source Han Sans"
+	"Meiryo Italic"="Source Han Sans"
+	"Meiryo UI Italic"="Source Han Sans"
+	"Meiryo Bold"="Source Han Sans Bold"
+	"Meiryo Bold Italic"="Source Han Sans Bold"
+	"Meiryo UI Bold"="Source Han Sans Bold"
+	"Meiryo UI Bold Italic"="Source Han Sans Bold"
+	EOF
+
+	stage_installed "$verb"
+}
+
+install_fakejapanese_ipamona() {
+	verb="fakejapanese_ipamona"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	install_ipamona
+
+	stage_font_replacement <<-EOF
+	"MS UI Gothic"="IPAMonaUIGothic"
+	"MS Gothic"="IPAMonaGothic"
+	"MS PGothic"="IPAMonaPGothic"
+	"MS Mincho"="IPAMonaMincho"
+	"MS PMincho"="IPAMonaPMincho"
+	"ＭＳ ゴシック"="IPAMonaGothic"
+	"ＭＳ Ｐゴシック"="IPAMonaPGothic"
+	"ＭＳ 明朝"="IPAMonaMincho"
+	"ＭＳ Ｐ明朝"="IPAMonaPMincho"
+	EOF
+
+	stage_installed "$verb"
+}
+
+install_fakejapanese_vlgothic() {
+	verb="fakejapanese_vlgothic"
+	conflicts="meiryo"
+
+	if is_verb_installed "$conflicts"; then
+		echo "!! $verb conflicts with $conflicts"
+		return
+	fi
+
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	install_vlgothic
+
+	stage_font_replacement <<-EOF
+	"Meiryo UI"="VL Gothic"
+	"Meiryo"="VL Gothic"
+	"メイリオ"="VL Gothic"
+	EOF
+
+	stage_installed "$verb"
+}
+
+install_fakekorean() {
+	verb="fakekorean"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	install_sourcehansans
+
+	# https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_fonts
+	stage_font_replacement <<-EOF
+	"Batang"="Source Han Sans K"
+	"BatangChe"="Source Han Sans K"
+	"Dotum"="Source Han Sans K"
+	"DotumChe"="Source Han Sans K"
+	"Gulim"="Source Han Sans K"
+	"GulimChe"="Source Han Sans K"
+	"Gungsuh"="Source Han Sans K"
+	"GungsuhChe"="Source Han Sans K"
+	"Malgun Gothic"="Source Han Sans K"
+	"바탕"="Source Han Sans K"
+	"바탕체"="Source Han Sans K"
+	"돋움"="Source Han Sans K"
+	"돋움체"="Source Han Sans K"
+	"굴림"="Source Han Sans K"
+	"굴림체"="Source Han Sans K"
+	"맑은 고딕"="Source Han Sans K"
+	EOF
+
+	stage_installed "$verb"
+}
+
+install_ipamona() {
+	verb="ipamona"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	download_and_cache "ipamona" "https://web.archive.org/web/20190309175311/http://www.geocities.jp/ipa_mona/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8.tar.gz" "ab77beea3b051abf606cd8cd3badf6cb24141ef145c60f508fcfef1e3852bb9d"
+
+	tar \
+		--ungzip \
+		--extract \
+		--file ~/.cache/winetricks/ipamona/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8.tar.gz \
+		--directory "$WINE_TEMP" \
+		--wildcards \
+		"opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8/fonts/ipa*.ttf"
+	mv "$WINE_TEMP/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8/fonts/ipagui-mona.ttf" "$WINE_FONTS/ipagui-mona.ttf"
+	mv "$WINE_TEMP/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8/fonts/ipag-mona.ttf" "$WINE_FONTS/ipag-mona.ttf"
+	mv "$WINE_TEMP/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8/fonts/ipagp-mona.ttf" "$WINE_FONTS/ipagp-mona.ttf"
+	mv "$WINE_TEMP/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8/fonts/ipam-mona.ttf" "$WINE_FONTS/ipam-mona.ttf"
+	mv "$WINE_TEMP/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8/fonts/ipamp-mona.ttf" "$WINE_FONTS/ipamp-mona.ttf"
+	rm -rf "$WINE_TEMP/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8"
+
+	stage_font_registration <<-EOF
+	"IPAMonaUIGothic (TrueType)"="ipagui-mona.ttf"
+	"IPAMonaGothic (TrueType)"="ipag-mona.ttf"
+	"IPAMonaPGothic (TrueType)"="ipagp-mona.ttf"
+	"IPAMonaMincho (TrueType)"="ipam-mona.ttf"
+	"IPAMonaPMincho (TrueType)"="ipamp-mona.ttf"
+	EOF
+
+	stage_installed "$verb"
+}
+
+install_liberation() {
+	# https://pagure.io/liberation-fonts
+
+	verb="liberation"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	download_and_cache "$verb" "https://releases.pagure.org/liberation-fonts/liberation-fonts-ttf-1.07.4.tar.gz" "61a7e2b6742a43c73e8762cdfeaf6dfcf9abdd2cfa0b099a9854d69bc4cfee5c"
+
+	tar --ungzip --extract --file "$WINETRICKS_CACHE/$verb/liberation-fonts-ttf-1.07.4.tar.gz" --directory "$WINE_TEMP" --wildcards "liberation-fonts-ttf-1.07.4/Liberation*.ttf"
+
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationMono-BoldItalic.ttf"       "$WINE_FONTS/liberationmono-bolditalic.ttf"
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationMono-Bold.ttf"             "$WINE_FONTS/liberationmono-bold.ttf"
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationMono-Italic.ttf"           "$WINE_FONTS/liberationmono-italic.ttf"
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationMono-Regular.ttf"          "$WINE_FONTS/liberationmono-regular.ttf"
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationSansNarrow-BoldItalic.ttf" "$WINE_FONTS/liberationsans-bolditalic.ttf"
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationSansNarrow-Bold.ttf"       "$WINE_FONTS/liberationsans-bold.ttf"
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationSansNarrow-Italic.ttf"     "$WINE_FONTS/liberationsans-italic.ttf"
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationSansNarrow-Regular.ttf"    "$WINE_FONTS/liberationsans-regular.ttf"
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationSans-BoldItalic.ttf"       "$WINE_FONTS/liberationsansnarrow-bolditalic.ttf"
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationSans-Bold.ttf"             "$WINE_FONTS/liberationsansnarrow-bold.ttf"
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationSans-Italic.ttf"           "$WINE_FONTS/liberationsansnarrow-italic.ttf"
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationSans-Regular.ttf"          "$WINE_FONTS/liberationsansnarrow-regular.ttf"
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationSerif-BoldItalic.ttf"      "$WINE_FONTS/liberationserif-bolditalic.ttf"
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationSerif-Bold.ttf"            "$WINE_FONTS/liberationserif-bold.ttf"
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationSerif-Italic.ttf"          "$WINE_FONTS/liberationserif-italic.ttf"
+	mv "$WINE_TEMP/liberation-fonts-ttf-1.07.4/LiberationSerif-Regular.ttf"         "$WINE_FONTS/liberationserif-regular.ttf"
+	rmdir "$WINE_TEMP/liberation-fonts-ttf-1.07.4"
+
+	stage_font_registration <<-EOF
+	"Liberation Mono Bold Italic (TrueType)"="liberationmono-bolditalic.ttf"
+	"Liberation Mono Bold (TrueType)"="liberationmono-bold.ttf"
+	"Liberation Mono Italic (TrueType)"="liberationmono-italic.ttf"
+	"Liberation Mono (TrueType)"="liberationmono-regular.ttf"
+	"Liberation Sans Bold Italic (TrueType)"="liberationsans-bolditalic.ttf"
+	"Liberation Sans Bold (TrueType)"="liberationsans-bold.ttf"
+	"Liberation Sans Italic (TrueType)"="liberationsans-italic.ttf"
+	"Liberation Sans (TrueType)"="liberationsans-regular.ttf"
+	"Liberation Sans Narrow Bold Italic (TrueType)"="liberationsansnarrow-bolditalic.ttf"
+	"Liberation Sans Narrow Bold (TrueType)"="liberationsansnarrow-bold.ttf"
+	"Liberation Sans Narrow Italic (TrueType)"="liberationsansnarrow-italic.ttf"
+	"Liberation Sans Narrow (TrueType)"="liberationsansnarrow-regular.ttf"
+	"Liberation Serif Bold Italic (TrueType)"="liberationserif-bolditalic.ttf"
+	"Liberation Serif Bold (TrueType)"="liberationserif-bold.ttf"
+	"Liberation Serif Italic (TrueType)"="liberationserif-italic.ttf"
+	"Liberation Serif (TrueType)"="liberationserif-regular.ttf"
+	EOF
+
+	stage_installed "$verb"
+}
+
+install_lucida() {
+	verb="lucida"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	download_and_cache "$verb" "https://ftpmirror.your.org/pub/misc/ftp.microsoft.com/bussys/winnt/winnt-public/fixes/usa/NT40TSE/hotfixes-postSP3/Euro-fix/eurofixi.exe" "41f272a33521f6e15f2cce9ff1e049f2badd5ff0dc327fc81b60825766d5b6c7"
+
+	cabextract "$WINETRICKS_CACHE/$verb/eurofixi.exe" --filter "lucon.ttf" --directory "$WINE_FONTS"
+
+	stage_font_registration <<-EOF
+	"Lucida Console (TrueType)"="lucon.ttf"
+	EOF
+
+	stage_installed "$verb"
+}
+
+install_opensymbol() {
+	# The OpenSymbol fonts are a replacement for the Windows Wingdings font from OpenOffice.org.
+
+	verb="opensymbol"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	# Need to download from Debian since I can't find a standalone download from OpenOffice
+	# Note: The source download package on debian is for _all_ of OpenOffice, which is 266 MB.
+	download_and_cache "$verb" "https://cdn-aws.deb.debian.org/debian-security/pool/updates/main/libr/libreoffice/fonts-opensymbol_102.10+LibO6.1.5-3+deb10u4_all.deb" "1b2ab1e8eeb9a3a4a07e4a1c9bf539bb721734bf8b9881f4d0b8e71e822cecde"
+
+	ar x "$WINETRICKS_CACHE/$verb/fonts-opensymbol_102.10+LibO6.1.5-3+deb10u4_all.deb" "data.tar.xz" --output "$WINE_TEMP"
+	tar --xz --extract --file "$WINE_TEMP/data.tar.xz" --directory "$WINE_TEMP" "./usr/share/fonts/truetype/openoffice/opens___.ttf"
+	mv "$WINE_TEMP/usr/share/fonts/truetype/openoffice/opens___.ttf" "$WINE_FONTS/opens___.ttf"
+
+	rm -rf "{$WINE_TEMP:?}/usr" # FIXME
+	rm "$WINE_TEMP/data.tar.xz"
+
+	stage_font_registration <<-EOF
+	"OpenSymbol (TrueType)"="opens___.ttf"
+	EOF
+
+	stage_installed "$verb"
+}
 
 install_sourcehansans() {
 	verb="sourcehansans"
 	if is_verb_installed "$verb"; then
 		return
 	fi
+
+	echo ":: Installing $verb"
 
 	download_and_cache \
 		"$verb" \
@@ -283,170 +944,37 @@ install_sourcehansans() {
 	stage_installed "$verb"
 }
 
-install_fakechinese() {
-	verb="fakechinese"
+install_tahoma() {
+	verb="tahoma"
 	if is_verb_installed "$verb"; then
 		return
 	fi
 
-	stage_font_replacement <<-EOF
-	"Dengxian"="Source Han Sans SC"
-	"FangSong"="Source Han Sans SC"
-	"KaiTi"="Source Han Sans SC"
-	"Microsoft YaHei"="Source Han Sans SC"
-	"Microsoft YaHei UI"="Source Han Sans SC"
-	"NSimSun"="Source Han Sans SC"
-	"SimHei"="Source Han Sans SC"
-	"SimKai"="Source Han Sans SC"
-	"SimSun"="Source Han Sans SC"
-	"SimSun-ExtB"="Source Han Sans SC"
-	"DFKai-SB"="Source Han Sans TC"
-	"Microsoft JhengHei"="Source Han Sans TC"
-	"Microsoft JhengHei UI"="Source Han Sans TC"
-	"MingLiU"="Source Han Sans TC"
-	"PMingLiU"="Source Han Sans TC"
-	"MingLiU-ExtB"="Source Han Sans TC"
-	"PMingLiU-ExtB"="Source Han Sans TC"
-	EOF
+	echo ":: Installing $verb"
 
-	stage_installed "$verb"
-}
+	# Formerly at https://download.microsoft.com/download/ie55sp2/Install/5.5_SP2/WIN98Me/EN-US/IELPKTH.CAB
+	download_and_cache "$verb" "https://downloads.sourceforge.net/corefonts/OldFiles/IELPKTH.CAB" "c1be3fb8f0042570be76ec6daa03a99142c88367c1bc810240b85827c715961a"
 
-install_fakejapanese() {
-	verb="fakejapanese"
-	if is_verb_installed "$verb"; then
-		return
-	fi
-
-	stage_font_replacement <<-EOF
-	"Meiryo"="Source Han Sans"
-	"Meiryo UI"="Source Han Sans"
-	"MS Gothic"="Source Han Sans"
-	"MS Mincho"="Source Han Sans"
-	"MS PGothic"="Source Han Sans"
-	"MS PMincho"="Source Han Sans"
-	"MS UI Gothic"="Source Han Sans"
-	"UD Digi KyoKasho N-R"="Source Han Sans"
-	"UD Digi KyoKasho NK-R"="Source Han Sans"
-	"UD Digi KyoKasho NP-R"="Source Han Sans"
-	"Yu Gothic"="Source Han Sans"
-	"Yu Gothic UI"="Source Han Sans"
-	"Yu Mincho"="Source Han Sans"
-	"メイリオ"="Source Han Sans"
-	"ＭＳ ゴシック"="Source Han Sans"
-	"ＭＳ 明朝"="Source Han Sans"
-	"ＭＳ Ｐゴシック"="Source Han Sans"
-	"ＭＳ Ｐ明朝"="Source Han Sans"
-	"Meiryo Italic"="Source Han Sans"
-	"Meiryo UI Italic"="Source Han Sans"
-	"Meiryo Bold"="Source Han Sans Bold"
-	"Meiryo Bold Italic"="Source Han Sans Bold"
-	"Meiryo UI Bold"="Source Han Sans Bold"
-	"Meiryo UI Bold Italic"="Source Han Sans Bold"
-	EOF
-
-	stage_installed "$verb"
-}
-
-install_fakekorean() {
-	verb="fakekorean"
-	if is_verb_installed "$verb"; then
-		return
-	fi
-
-	stage_font_replacement <<-EOF
-	"Batang"="Source Han Sans K"
-	"BatangChe"="Source Han Sans K"
-	"Dotum"="Source Han Sans K"
-	"DotumChe"="Source Han Sans K"
-	"Gulim"="Source Han Sans K"
-	"GulimChe"="Source Han Sans K"
-	"Gungsuh"="Source Han Sans K"
-	"GungsuhChe"="Source Han Sans K"
-	"Malgun Gothic"="Source Han Sans K"
-	"바탕"="Source Han Sans K"
-	"바탕체"="Source Han Sans K"
-	"돋움"="Source Han Sans K"
-	"돋움체"="Source Han Sans K"
-	"굴림"="Source Han Sans K"
-	"굴림체"="Source Han Sans K"
-	"맑은 고딕"="Source Han Sans K"
-	EOF
-
-	stage_installed "$verb"
-}
-
-install_unifont() {
-	verb="unifont"
-	if is_verb_installed "$verb"; then
-		return
-	fi
-
-	download_and_cache "$verb" "https://unifoundry.com/pub/unifont/unifont-13.0.06/font-builds/unifont-13.0.06.ttf" "d73c0425811ffd366b0d1973e9338bac26fe7cf085760a12e10c61241915e742"
-
-	echo ":: Copying Unifont"
-	cp "$WINETRICKS_CACHE/unifont/unifont-13.0.06.ttf" "$WINE_FONTS/unifont.ttf"
-	stage_font_registration <<-EOF
-	"Unifont (TrueType)"="unifont.ttf"
-	EOF
-	stage_font_replacement <<-EOF
-	"Arial Unicode MS"="Unifont"
-	EOF
-
-	stage_installed "$verb"
-}
-
-install_cjkfonts() {
-	install_fakechinese
-	install_fakejapanese
-	install_fakekorean
-	install_unifont
-
-	verb="cjkfonts"
-	if ! is_verb_installed "$verb"; then
-		stage_installed "$verb"
-	fi
-}
-
-install_ipamona() {
-	verb="ipamona"
-	if is_verb_installed "$verb"; then
-		return
-	fi
-
-	download_and_cache "ipamona" "https://web.archive.org/web/20190309175311/http://www.geocities.jp/ipa_mona/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8.tar.gz" "ab77beea3b051abf606cd8cd3badf6cb24141ef145c60f508fcfef1e3852bb9d"
-
-	echo ":: Extracting IPA Mona"
-	tar \
-		--ungzip \
-		--extract \
-		--file ~/.cache/winetricks/ipamona/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8.tar.gz \
-		--directory "$WINE_TEMP" \
-		--wildcards \
-		"opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8/fonts/ipa*.ttf"
-	mv "$WINE_TEMP/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8/fonts/ipagui-mona.ttf" "$WINE_FONTS/ipagui-mona.ttf"
-	mv "$WINE_TEMP/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8/fonts/ipag-mona.ttf" "$WINE_FONTS/ipag-mona.ttf"
-	mv "$WINE_TEMP/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8/fonts/ipagp-mona.ttf" "$WINE_FONTS/ipagp-mona.ttf"
-	mv "$WINE_TEMP/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8/fonts/ipam-mona.ttf" "$WINE_FONTS/ipam-mona.ttf"
-	mv "$WINE_TEMP/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8/fonts/ipamp-mona.ttf" "$WINE_FONTS/ipamp-mona.ttf"
-	rm -rf "$WINE_TEMP/opfc-ModuleHP-1.1.1_withIPAMonaFonts-1.0.8"
+	cabextract "$WINETRICKS_CACHE/$verb/IELPKTH.CAB" --filter "tahoma*.ttf" --directory "$WINE_FONTS"
 
 	stage_font_registration <<-EOF
-	"IPAMonaUIGothic (TrueType)"="ipagui-mona.ttf"
-	"IPAMonaGothic (TrueType)"="ipag-mona.ttf"
-	"IPAMonaPGothic (TrueType)"="ipagp-mona.ttf"
-	"IPAMonaMincho (TrueType)"="ipam-mona.ttf"
-	"IPAMonaPMincho (TrueType)"="ipamp-mona.ttf"
+	"Tahoma (TrueType)"="tahoma.ttf"
+	"Tahoma Bold (TrueType)"="tahomabd.ttf"
 	EOF
 
 	stage_installed "$verb"
 }
 
 install_takao() {
+	# The Takao font provides Japanese glyphs. May also be needed with fakejapanese function above.
+	# Project page: https://launchpad.net/takao-fonts
+
 	verb="takao"
 	if is_verb_installed "$verb"; then
 		return
 	fi
+
+	echo ":: Installing $verb"
 
 	download_and_cache "$verb" "https://launchpad.net/takao-fonts/trunk/003.02.01/+download/takao-fonts-ttf-003.02.01.zip" "2f526a16c7931958f560697d494d8304949b3ce0aef246fb0c727fbbcc39089e"
 
@@ -471,15 +999,60 @@ install_takao() {
 	stage_installed "$verb"
 }
 
+install_uff() {
+	verb="uff"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	download_and_cache "$verb" "https://assets.ubuntu.com/v1/fad7939b-ubuntu-font-family-0.83.zip" "456d7d42797febd0d7d4cf1b782a2e03680bb4a5ee43cc9d06bda172bac05b42" ubuntu-font-family-0.83.zip
+	unzip -j "$WINETRICKS_CACHE/$verb/ubuntu-font-family-0.83.zip" -d "$WINE_TEMP" "ubuntu-font-family-0.83/Ubuntu*.ttf"
+
+	mv "$WINE_TEMP/Ubuntu-BI.ttf" "$WINE_FONTS/ubuntu-bi.ttf"
+	mv "$WINE_TEMP/Ubuntu-B.ttf" "$WINE_FONTS/ubuntu-b.ttf"
+	mv "$WINE_TEMP/Ubuntu-C.ttf" "$WINE_FONTS/ubuntu-c.ttf"
+	mv "$WINE_TEMP/Ubuntu-LI.ttf" "$WINE_FONTS/ubuntu-li.ttf"
+	mv "$WINE_TEMP/Ubuntu-L.ttf" "$WINE_FONTS/ubuntu-l.ttf"
+	mv "$WINE_TEMP/Ubuntu-MI.ttf" "$WINE_FONTS/ubuntu-mi.ttf"
+	mv "$WINE_TEMP/UbuntuMono-BI.ttf" "$WINE_FONTS/ubuntumono-bi.ttf"
+	mv "$WINE_TEMP/UbuntuMono-B.ttf" "$WINE_FONTS/ubuntumono-b.ttf"
+	mv "$WINE_TEMP/UbuntuMono-RI.ttf" "$WINE_FONTS/ubuntumono-ri.ttf"
+	mv "$WINE_TEMP/UbuntuMono-R.ttf" "$WINE_FONTS/ubuntumono-r.ttf"
+	mv "$WINE_TEMP/Ubuntu-M.ttf" "$WINE_FONTS/ubuntu-m.ttf"
+	mv "$WINE_TEMP/Ubuntu-RI.ttf" "$WINE_FONTS/ubuntu-ri.ttf"
+	mv "$WINE_TEMP/Ubuntu-R.ttf" "$WINE_FONTS/ubuntu-r.ttf"
+
+	stage_font_registration <<-EOF
+	"Ubuntu Bold Italic (TrueType)"="ubuntu-bi.ttf"
+	"Ubuntu Bold (TrueType)"="ubuntu-b.ttf"
+	"Ubuntu Condensed (TrueType)"="ubuntu-c.ttf"
+	"Ubuntu Light Italic (TrueType)"="ubuntu-li.ttf"
+	"Ubuntu Light (TrueType)"="ubuntu-l.ttf"
+	"Ubuntu Medium Italic (TrueType)"="ubuntu-mi.ttf"
+	"Ubuntu Mono Bold Italic (TrueType)"="ubuntumono-bi.ttf"
+	"Ubuntu Mono Bold (TrueType)"="ubuntumono-b.ttf"
+	"Ubuntu Mono Italic (TrueType)"="ubuntumono-ri.ttf"
+	"Ubuntu Mono (TrueType)"="ubuntumono-r.ttf"
+	"Ubuntu Medium (TrueType)"="ubuntu-m.ttf"
+	"Ubuntu Italic (TrueType)"="ubuntu-ri.ttf"
+	"Ubuntu (TrueType)"="ubuntu-r.ttf"
+	EOF
+
+	stage_installed "$verb"
+}
+
 install_vlgothic() {
 	verb="vlgothic"
 	if is_verb_installed "$verb"; then
 		return
 	fi
 
+	echo ":: Installing $verb"
+
 	download_and_cache "$verb" "https://ja.osdn.net/projects/vlgothic/downloads/62375/VLGothic-20141206.tar.xz" "982040db2f9cb73d7c6ab7d9d163f2ed46d1180f330c9ba2fae303649bf8102d"
 
-	echo ":: Extracting VL Gothic"
 	tar \
 		--xz \
 		--extract \
@@ -499,11 +1072,118 @@ install_vlgothic() {
 	stage_installed "$verb"
 }
 
-# endregion: verbs/cjk
+install_wenquanyi()
+{
+	# See http://wenq.org/enindex.cgi
+	# Donate at http://wenq.org/enindex.cgi?Download(en)#MicroHei_Beta if you want to help support free CJK font development
+
+	verb="wenquanyi"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	download_and_cache "$verb" "https://downloads.sourceforge.net/wqy/wqy-microhei-0.2.0-beta.tar.gz" "2802ac8023aa36a66ea6e7445854e3a078d377ffff42169341bd237871f7213e"
+
+	tar --ungzip --extract --file "$WINETRICKS_CACHE/$verb/wqy-microhei-0.2.0-beta.tar.gz" --directory "$WINE_TEMP" "wqy-microhei/wqy-microhei.ttc"
+	mv "$WINE_TEMP/wqy-microhei/wqy-microhei.ttc" "$WINE_FONTS"
+	rmdir "$WINE_TEMP/wqy-microhei"
+
+	stage_font_registration <<-EOF
+	"WenQuanYi Micro Hei (TrueType)"="wqy-microhei.ttc"
+	EOF
+
+	stage_installed "$verb"
+}
+
+install_wenquanyizenhei()
+{
+	# See http://wenq.org/wqy2/index.cgi?ZenHei
+	# Donate at http://wenq.org/wqy2/index.cgi?Donation if you want to help support free font development
+
+	verb="wenquanyizenhei"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	download_and_cache "$verb" "http://downloads.sourceforge.net/wqy/wqy-zenhei-0.8.38-1.tar.gz" "6018eb54243eddc41e9cbe0b71feefa5cb2570ecbaccd39daa025961235dea22"
+
+	tar --ungzip --extract --file "$WINETRICKS_CACHE/$verb/wqy-zenhei-0.8.38-1.tar.gz" --directory "$WINE_TEMP" "wqy-zenhei/wqy-zenhei.ttc"
+	mv "$WINE_TEMP/wqy-zenhei/wqy-zenhei.ttc" "$WINE_FONTS"
+	rmdir "$WINE_TEMP/wqy-zenhei"
+
+	stage_font_registration <<-EOF
+	"WenQuanYi Zen Hei (TrueType)"="wqy-zenhei.ttc"
+	EOF
+
+	stage_installed "$verb"
+}
+
+install_unifont() {
+	# The GNU Unifont provides glyphs for just about everything in common language. It is intended for multilingual usage.
+	# Project page: https://unifoundry.com/unifont/index.html
+
+	verb="unifont"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	download_and_cache "$verb" "https://unifoundry.com/pub/unifont/unifont-13.0.06/font-builds/unifont-13.0.06.ttf" "d73c0425811ffd366b0d1973e9338bac26fe7cf085760a12e10c61241915e742"
+
+	cp "$WINETRICKS_CACHE/unifont/unifont-13.0.06.ttf" "$WINE_FONTS/unifont.ttf"
+	stage_font_registration <<-EOF
+	"Unifont (TrueType)"="unifont.ttf"
+	EOF
+	stage_font_replacement <<-EOF
+	"Arial Unicode MS"="Unifont"
+	EOF
+
+	stage_installed "$verb"
+}
+
+install_allfonts() {
+	verb="allfonts"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	install_baekmuk
+	install_pptfonts "don't mark as installed"
+	install_corefonts
+	install_droid
+	install_eufonts
+	install_ipamona
+	install_liberation
+	install_lucida
+	install_opensymbol
+	install_sourcehansans
+	install_tahoma
+	install_takao
+	install_uff
+	install_vlgothic
+	install_wenquanyi
+	install_wenquanyizenhei
+	install_unifont
+
+	verb="allfonts"
+	if ! is_verb_installed "$verb"; then
+		stage_installed "$verb"
+	fi
+}
+
+# endregion: verbs/fonts
 
 # endregion: verbs
 
 # region: utility
+
 initialize_wineprefix() {
 	if test -z "$WINEPREFIX"; then
 		WINEPREFIX="$HOME/.wine"
@@ -542,9 +1222,12 @@ download_and_cache() {
 	package=$1
 	package_dir="$WINETRICKS_CACHE/$package"
 	url=$2
-	filename=$(basename "$2")
-	filepath="$package_dir/$filename"
 	expected_checksum=$3
+	filename=$4
+	if test -z "$filename"; then
+		filename=$(basename "$2")
+	fi
+	filepath="$package_dir/$filename"
 
 	if test ! -e "$filepath" || test -e "$filepath.aria2"; then
 		echo ":: Downloading $url"
@@ -597,12 +1280,15 @@ merge_registry_files_and_import() {
 		if test ! -e "$MERGED_REG_PART"; then
 			touch "$MERGED_REG_PART"
 		fi
-		{
-			echo "[HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Fonts]"
-			cat "$FONTS_REG_PART"
-			echo "[HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Fonts]"
-			cat "$FONTS_REG_PART"
-		} >> "$MERGED_REG_PART"
+
+		cat >> "$MERGED_REG_PART" <<-EOF
+		[HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Fonts]
+		$(cat "$FONTS_REG_PART")
+
+		[HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Fonts]
+		$(cat "$FONTS_REG_PART")
+		EOF
+
 		rm "$FONTS_REG_PART"
 	fi
 
@@ -610,23 +1296,33 @@ merge_registry_files_and_import() {
 		if test ! -e "$MERGED_REG_PART"; then
 			touch "$MERGED_REG_PART"
 		fi
-		{
-			echo "[HKEY_CURRENT_USER\Software\Wine\Fonts\Replacements]"
-			cat "$FONT_REPLACEMENTS_PART"
-		} >> "$MERGED_REG_PART"
+
+		cat >> "$MERGED_REG_PART" <<-EOF
+		[HKEY_CURRENT_USER\\Software\\Wine\\Fonts\\Replacements]
+		$(cat "$FONT_REPLACEMENTS_PART")
+		EOF
+
 		rm "$FONT_REPLACEMENTS_PART"
 	fi
 
 	if test -s "$MERGED_REG_PART"; then
-		touch "$MERGED_REG"
-		{
-			echo "Windows Registry Editor Version 5.00"
-			cat "$MERGED_REG_PART"
-		} >> "$MERGED_REG"
+		cat > "$MERGED_REG" <<-EOF
+		REGEDIT4
+
+		$(cat "$MERGED_REG_PART")
+		EOF
+
 		rm "$MERGED_REG_PART"
 
 		echo ":: Importing registry keys"
 		wine regedit "$MERGED_REG"
+
+		# entries under [HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Fonts]
+		# will be ignored and won't end up saved if we also don't call `wine64`
+		if test -d "$WINE_WINDOW/syswow64"; then
+			wine64 regedit "$MERGED_REG"
+		fi
+
 		rm "$MERGED_REG"
 	fi
 }
@@ -636,13 +1332,13 @@ merge_registry_files_and_import() {
 if test ! -z "$*"; then
 	initialize_wineprefix
 
-	WINE_WINDOW=$(find -L "$W_DRIVE_C" -maxdepth 1 -iname "windows" -type d | head -1);
+	WINE_WINDOW=$(LANG=C find -L "$W_DRIVE_C" -maxdepth 1 -iname "windows" -type d | head -1);
 	if test -z "$WINE_WINDOW"; then echo "!! failed to find C:/Windows directory" && exit; fi
 
-	WINE_FONTS=$(find -L "$WINE_WINDOW" -maxdepth 1 -iname "fonts" -type d | head -1)
+	WINE_FONTS=$(LANG=C find -L "$WINE_WINDOW" -maxdepth 1 -iname "fonts" -type d | head -1)
 	if test -z "$WINE_FONTS"; then echo "!! failed to find C:/Windows/Fonts directory" && exit; fi
 
-	WINE_TEMP=$(find -L "$WINE_WINDOW" -maxdepth 1 -iname "temp" -type d | head -1)
+	WINE_TEMP=$(LANG=C find -L "$WINE_WINDOW" -maxdepth 1 -iname "temp" -type d | head -1)
 	if test -z "$WINE_TEMP"; then echo "!! failed to find C:/Windows/Temp directory" && exit; fi
 
 	FONTS_REG_PART="$WINE_TEMP/fonts.reg.part"
@@ -652,6 +1348,16 @@ if test ! -z "$*"; then
 	for var in "$@"
 	do
 		case "$var" in
+			baekmuk) install_baekmuk ;;
+			cjkfonts) install_cjkfonts ;;
+			calibri) install_calibri ;;
+			cambria) install_cambria ;;
+			candara) install_candara ;;
+			consolas) install_consolas ;;
+			constantia) install_constantia ;;
+			corbel) install_corbel ;;
+			meiryo) install_meiryo ;;
+			pptfonts) install_pptfonts ;;
 			andale) install_andale ;;
 			arial) install_arial ;;
 			comicsans) install_comicsans ;;
@@ -663,14 +1369,26 @@ if test ! -z "$*"; then
 			verdana) install_verdana ;;
 			webdings) install_webdings ;;
 			corefonts) install_corefonts ;;
-			sourcehansans) install_sourcehansans ;;
+			droid) install_droid ;;
+			eufonts) install_eufonts ;;
 			fakechinese) install_fakechinese ;;
 			fakejapanese) install_fakejapanese ;;
+			fakejapanese_ipamona) install_fakejapanese_ipamona ;;
+			fakejapanese_vlgothic) install_fakejapanese_vlgothic ;;
 			fakekorean) install_fakekorean ;;
-			unifont) install_unifont ;;
 			ipamona) install_ipamona ;;
+			liberation) install_liberation ;;
+			lucida) install_lucida ;;
+			opensymbol) install_opensymbol ;;
+			sourcehansans) install_sourcehansans ;;
+			tahoma) install_tahoma ;;
 			takao) install_takao ;;
+			uff) install_uff ;;
 			vlgothic) install_vlgothic ;;
+			wenquanyi) install_wenquanyi ;;
+			wenquanyizenhei) install_wenquanyizenhei ;;
+			unifont) install_unifont ;;
+			allfonts) install_allfonts ;;
 			*) echo "!! Unknown verb: $var" ;;
 		esac
 	done
