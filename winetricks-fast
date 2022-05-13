@@ -3,7 +3,6 @@ set -e
 
 XDG_CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}"
 WINETRICKS_CACHE="$XDG_CACHE_HOME/winetricks"
-WINETRICKS_LOG="$WINEPREFIX/winetricks.log"
 
 # region: verbs
 
@@ -1497,6 +1496,7 @@ if test ! -z "$*"; then
 	FONT_REPLACEMENTS_REG_PART="$WINE_TEMP/font-replacements.reg.part"
 	DLL_OVERRIDE_REG_PART="$WINE_TEMP/dll-overrides.reg.part"
 	WINETRICKS_LOG_TEMP="$WINE_TEMP/winetricks.log"
+	WINETRICKS_LOG="$WINEPREFIX/winetricks.log"
 
 	for var in "$@"
 	do
