@@ -1,7 +1,7 @@
 #compdef winetricks-fast
 
 local verbs=(
-    'dxvk'\
+    'dxvk1101'\
     'd3dcompiler_43'\
     'd3dx9'\
     'baekmuk'\

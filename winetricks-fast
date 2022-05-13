@@ -7,7 +7,7 @@ WINETRICKS_LOG="$WINEPREFIX/winetricks.log"
 
 # region: verbs
 
-install_dxvk() {
+install_dxvk1101() {
 	verb="dxvk1101"
 	if is_verb_installed "$verb"; then
 		return
@@ -1501,7 +1501,7 @@ if test ! -z "$*"; then
 	for var in "$@"
 	do
 		case "$var" in
-			dxvk) install_dxvk ;;
+			dxvk1101) install_dxvk ;;
 			d3dcompiler_43) install_d3dcompiler_43 ;;
 			d3dx9) install_d3dx9 ;;
 			baekmuk) install_baekmuk ;;
