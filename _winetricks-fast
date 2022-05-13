@@ -1,6 +1,9 @@
 #compdef winetricks-fast
 
 local verbs=(
+    'dxvk'\
+    'd3dcompiler_43'\
+    'd3dx9'\
     'baekmuk'\
     'cjkfonts'\
     'calibri'\

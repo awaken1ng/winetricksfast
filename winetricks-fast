@@ -7,6 +7,122 @@ WINETRICKS_LOG="$WINEPREFIX/winetricks.log"
 
 # region: verbs
 
+install_dxvk() {
+	verb="dxvk1101"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	download_and_cache "$verb" "https://github.com/doitsujin/dxvk/releases/download/v1.10.1/dxvk-1.10.1.tar.gz" "dc349482cb0a73d4e29c82f8e9ff6031e09e176e84a97ffe91eac64422b307aa"
+
+	tar --ungzip --extract --file "$WINETRICKS_CACHE/dxvk/dxvk-1.10.1.tar.gz" --directory "$WINE_TEMP"
+	rm "$WINE_TEMP/dxvk-1.10.1/setup_dxvk.sh"
+
+	mv "$WINE_TEMP/dxvk-1.10.1/x32/"*.dll "$WINE_SYSTEM32_DLLS"
+	rmdir "$WINE_TEMP/dxvk-1.10.1/x32"
+
+	if is_win64; then
+		mv "$WINE_TEMP/dxvk-1.10.1/x64/"*.dll "$WINE_SYSTEM64_DLLS"
+		rmdir "$WINE_TEMP/dxvk-1.10.1/x64"
+	fi
+
+	rmdir "$WINE_TEMP/dxvk-1.10.1"
+
+	install_d3dcompiler_43 "don't download"
+	install_d3dx9 "don't download"
+
+	stage_dll_override <<-EOF
+	"*d3d9"="native"
+	"*d3d10"="native"
+	"*d3d10core"="native"
+	"*d3d10_1"="native"
+	"*d3d11"="native"
+	"*dxgi"="native"
+	EOF
+
+	stage_installed "dxvk1101"
+}
+
+install_d3dcompiler_43() {
+	verb="d3dcompiler_43"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	if test "$1" != "don't download"; then
+		download_and_cache "directx9" "https://files.holarse-linuxgaming.de/mirrors/microsoft/directx_Jun2010_redist.exe" "8746ee1a84a083a90e37899d71d50d5c7c015e69688a466aa80447f011780c0d"
+	fi
+
+	cabextract "$WINETRICKS_CACHE/directx9/directx_Jun2010_redist.exe" --filter "Jun2010_D3DCompiler_43_x*.cab" --directory "$WINE_TEMP"
+	cabextract "$WINE_TEMP/Jun2010_D3DCompiler_43_x86.cab" --filter "D3DCompiler_43.dll" --lowercase --directory "$WINE_SYSTEM32_DLLS"
+	rm "$WINE_TEMP/Jun2010_D3DCompiler_43_x86.cab"
+
+	if is_win64; then
+		cabextract "$WINE_TEMP/Jun2010_D3DCompiler_43_x64.cab" --filter "D3DCompiler_43.dll" --lowercase --directory "$WINE_SYSTEM64_DLLS"
+		rm "$WINE_TEMP/Jun2010_D3DCompiler_43_x64.cab"
+	fi
+
+	stage_dll_override <<-EOF
+	"*d3dcompiler_43"="native"
+	EOF
+
+	stage_installed "d3dcompiler_43"
+}
+
+install_d3dx9() {
+	verb="d3dx9"
+	if is_verb_installed "$verb"; then
+		return
+	fi
+
+	echo ":: Installing $verb"
+
+	if test "$1" != "don't download"; then
+		download_and_cache "directx9" "https://files.holarse-linuxgaming.de/mirrors/microsoft/directx_Jun2010_redist.exe" "8746ee1a84a083a90e37899d71d50d5c7c015e69688a466aa80447f011780c0d"
+	fi
+
+	cabextract "$WINETRICKS_CACHE/directx9/directx_Jun2010_redist.exe" --filter "*_d3dx9_*_x86.cab" --directory "$WINE_TEMP"
+	for cab in "$WINE_TEMP/"*_d3dx9_*_x86.cab; do
+		cabextract "$cab" --filter "d3dx9_*.dll" --directory "$WINE_SYSTEM32_DLLS"
+		rm "$cab"
+	done
+
+	if is_win64; then
+		cabextract "$WINETRICKS_CACHE/directx9/directx_Jun2010_redist.exe" --filter "*_d3dx9_*_x64.cab" --directory "$WINE_TEMP"
+		for cab in "$WINE_TEMP/"*_d3dx9_*_x64.cab; do
+			cabextract "$cab" --filter "d3dx9_*.dll" --directory "$WINE_SYSTEM64_DLLS"
+			rm "$cab"
+		done
+	fi
+
+	stage_dll_override <<-EOF
+	"*d3dx9_24"="native"
+	"*d3dx9_25"="native"
+	"*d3dx9_26"="native"
+	"*d3dx9_27"="native"
+	"*d3dx9_28"="native"
+	"*d3dx9_29"="native"
+	"*d3dx9_30"="native"
+	"*d3dx9_31"="native"
+	"*d3dx9_32"="native"
+	"*d3dx9_33"="native"
+	"*d3dx9_34"="native"
+	"*d3dx9_35"="native"
+	"*d3dx9_36"="native"
+	"*d3dx9_37"="native"
+	"*d3dx9_38"="native"
+	"*d3dx9_39"="native"
+	"*d3dx9_40"="native"
+	"*d3dx9_41"="native"
+	"*d3dx9_42"="native"
+	"*d3dx9_43"="native"
+	EOF
+
+	stage_installed "d3dx9"
+}
+
 # region: verbs/fonts
 
 install_baekmuk() {
@@ -629,7 +745,8 @@ install_fakechinese() {
 	"PMingLiU-ExtB"="Source Han Sans TC"
 	EOF
 
-	stage_installed "$verb"
+	# `$verb` overwritten by `sourcehansans`
+	stage_installed "fakechinese"
 }
 
 install_fakejapanese() {
@@ -670,7 +787,8 @@ install_fakejapanese() {
 	"Meiryo UI Bold Italic"="Source Han Sans Bold"
 	EOF
 
-	stage_installed "$verb"
+	# `$verb` overwritten by `sourcehansans`
+	stage_installed "fakejapanese"
 }
 
 install_fakejapanese_ipamona() {
@@ -695,7 +813,8 @@ install_fakejapanese_ipamona() {
 	"ＭＳ Ｐ明朝"="IPAMonaPMincho"
 	EOF
 
-	stage_installed "$verb"
+	# `$verb` overwritten by `ipamona`
+	stage_installed "fakejapanese_ipamona"
 }
 
 install_fakejapanese_vlgothic() {
@@ -721,7 +840,8 @@ install_fakejapanese_vlgothic() {
 	"メイリオ"="VL Gothic"
 	EOF
 
-	stage_installed "$verb"
+	# `$verb` overwritten by `vlgothic`
+	stage_installed "fakejapanese_vlgothic"
 }
 
 install_fakekorean() {
@@ -754,7 +874,8 @@ install_fakekorean() {
 	"맑은 고딕"="Source Han Sans K"
 	EOF
 
-	stage_installed "$verb"
+	# `$verb` overwritten by `sourcehansans`
+	stage_installed "fakekorean"
 }
 
 install_ipamona() {
@@ -883,7 +1004,7 @@ install_opensymbol() {
 	tar --xz --extract --file "$WINE_TEMP/data.tar.xz" --directory "$WINE_TEMP" "./usr/share/fonts/truetype/openoffice/opens___.ttf"
 	mv "$WINE_TEMP/usr/share/fonts/truetype/openoffice/opens___.ttf" "$WINE_FONTS/opens___.ttf"
 
-	rm -rf "{$WINE_TEMP:?}/usr" # FIXME
+	rm -rf "${WINE_TEMP:?}/usr"
 	rm "$WINE_TEMP/data.tar.xz"
 
 	stage_font_registration <<-EOF
@@ -957,6 +1078,10 @@ install_tahoma() {
 
 	cabextract "$WINETRICKS_CACHE/$verb/IELPKTH.CAB" --filter "tahoma*.ttf" --directory "$WINE_FONTS"
 
+	# extracts as 444
+	chmod 744 "$WINE_FONTS/tahoma.ttf"
+	chmod 744 "$WINE_FONTS/tahomabd.ttf"
+
 	stage_font_registration <<-EOF
 	"Tahoma (TrueType)"="tahoma.ttf"
 	"Tahoma Bold (TrueType)"="tahomabd.ttf"
@@ -978,14 +1103,17 @@ install_takao() {
 
 	download_and_cache "$verb" "https://launchpad.net/takao-fonts/trunk/003.02.01/+download/takao-fonts-ttf-003.02.01.zip" "2f526a16c7931958f560697d494d8304949b3ce0aef246fb0c727fbbcc39089e"
 
-	echo ":: Extracting Takao"
-	unzip -j "$WINETRICKS_CACHE/$verb/$verb-fonts-ttf-003.02.01.zip" -d "$WINE_FONTS"
-	mv "$WINE_FONTS/TakaoExGothic.ttf" "$WINE_FONTS/takaoexgothic.ttf"
-	mv "$WINE_FONTS/TakaoExMincho.ttf" "$WINE_FONTS/takaoexmincho.ttf"
-	mv "$WINE_FONTS/TakaoGothic.ttf"   "$WINE_FONTS/takaogothic.ttf"
-	mv "$WINE_FONTS/TakaoMincho.ttf"   "$WINE_FONTS/takaomincho.ttf"
-	mv "$WINE_FONTS/TakaoPGothic.ttf"  "$WINE_FONTS/takaopgothic.ttf"
-	mv "$WINE_FONTS/TakaoPMincho.ttf"  "$WINE_FONTS/takaopmincho.ttf"
+	unzip -j "$WINETRICKS_CACHE/$verb/$verb-fonts-ttf-003.02.01.zip" -d "$WINE_TEMP"
+	mv "$WINE_TEMP/TakaoExGothic.ttf" "$WINE_FONTS/takaoexgothic.ttf"
+	mv "$WINE_TEMP/TakaoExMincho.ttf" "$WINE_FONTS/takaoexmincho.ttf"
+	mv "$WINE_TEMP/TakaoGothic.ttf"   "$WINE_FONTS/takaogothic.ttf"
+	mv "$WINE_TEMP/TakaoMincho.ttf"   "$WINE_FONTS/takaomincho.ttf"
+	mv "$WINE_TEMP/TakaoPGothic.ttf"  "$WINE_FONTS/takaopgothic.ttf"
+	mv "$WINE_TEMP/TakaoPMincho.ttf"  "$WINE_FONTS/takaopmincho.ttf"
+	rm "$WINE_TEMP/ChangeLog"
+	rm "$WINE_TEMP/IPA_Font_License_Agreement_v1.0.txt"
+	rm "$WINE_TEMP/README"
+	rm "$WINE_TEMP/README.ja"
 
 	stage_font_registration <<-EOF
 	"TakaoGothic (TrueType)"="takaogothic.ttf"
@@ -1189,18 +1317,21 @@ initialize_wineprefix() {
 		WINEPREFIX="$HOME/.wine"
 	fi
 
-	W_DRIVE_C="$WINEPREFIX/dosdevices/c:"
+	WINE_DRIVE_C="$WINEPREFIX/dosdevices/c:"
 
-	if test ! -e "$W_DRIVE_C"; then
+	if test ! -e "$WINE_DRIVE_C"; then
 		echo ":: Initializing Wine prefix"
 		mkdir -p "$WINEPREFIX"
 		wineboot
-		wineserver -w
 	fi
 }
 
 is_verb_installed() {
 	grep -qw "$1" "$WINETRICKS_LOG" 2>/dev/null
+}
+
+is_win64() {
+	test -d "$WINE_WINDOWS/syswow64"
 }
 
 stage_installed() {
@@ -1256,6 +1387,8 @@ download_and_cache() {
 	fi
 }
 
+# region: utility/registry
+
 stage_font_registration() {
 	if test ! -e "$FONTS_REG_PART"; then
 		touch "$FONTS_REG_PART"
@@ -1265,11 +1398,19 @@ stage_font_registration() {
 }
 
 stage_font_replacement() {
-	if test ! -e "$FONTS_REG_PART"; then
-		touch "$FONT_REPLACEMENTS_PART"
+	if test ! -e "$FONT_REPLACEMENTS_REG_PART"; then
+		touch "$FONT_REPLACEMENTS_REG_PART"
 	fi
 
-	cat >> "$FONT_REPLACEMENTS_PART"
+	cat >> "$FONT_REPLACEMENTS_REG_PART"
+}
+
+stage_dll_override() {
+	if test ! -e "$DLL_OVERRIDE_REG_PART"; then
+		touch "$DLL_OVERRIDE_REG_PART"
+	fi
+
+	cat >> "$DLL_OVERRIDE_REG_PART"
 }
 
 merge_registry_files_and_import() {
@@ -1277,10 +1418,6 @@ merge_registry_files_and_import() {
 	MERGED_REG_PART="$MERGED_REG.part"
 
 	if test -s "$FONTS_REG_PART"; then
-		if test ! -e "$MERGED_REG_PART"; then
-			touch "$MERGED_REG_PART"
-		fi
-
 		cat >> "$MERGED_REG_PART" <<-EOF
 		[HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Fonts]
 		$(cat "$FONTS_REG_PART")
@@ -1292,22 +1429,29 @@ merge_registry_files_and_import() {
 		rm "$FONTS_REG_PART"
 	fi
 
-	if test -s "$FONT_REPLACEMENTS_PART"; then
-		if test ! -e "$MERGED_REG_PART"; then
-			touch "$MERGED_REG_PART"
-		fi
-
+	if test -s "$FONT_REPLACEMENTS_REG_PART"; then
 		cat >> "$MERGED_REG_PART" <<-EOF
 		[HKEY_CURRENT_USER\\Software\\Wine\\Fonts\\Replacements]
-		$(cat "$FONT_REPLACEMENTS_PART")
+		$(cat "$FONT_REPLACEMENTS_REG_PART")
 		EOF
 
-		rm "$FONT_REPLACEMENTS_PART"
+		rm "$FONT_REPLACEMENTS_REG_PART"
+	fi
+
+	if test -s "$DLL_OVERRIDE_REG_PART"; then
+		cat >> "$MERGED_REG_PART" <<-EOF
+		[HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides]
+		$(cat "$DLL_OVERRIDE_REG_PART")
+		EOF
+
+		rm "$DLL_OVERRIDE_REG_PART"
 	fi
 
 	if test -s "$MERGED_REG_PART"; then
-		cat > "$MERGED_REG" <<-EOF
-		REGEDIT4
+		# convert to UTF-16LE so that non-ASCII stuff is imported proper
+		# e.g. `fakejapanese` font replacements
+		iconv -f UTF-8 -t UTF-16LE >> "$MERGED_REG" <<-EOF
+		$(printf "\357\273\277")REGEDIT4
 
 		$(cat "$MERGED_REG_PART")
 		EOF
@@ -1319,7 +1463,7 @@ merge_registry_files_and_import() {
 
 		# entries under [HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Fonts]
 		# will be ignored and won't end up saved if we also don't call `wine64`
-		if test -d "$WINE_WINDOW/syswow64"; then
+		if is_win64; then
 			wine64 regedit "$MERGED_REG"
 		fi
 
@@ -1327,27 +1471,39 @@ merge_registry_files_and_import() {
 	fi
 }
 
+# endregion: utility/registry
+
 # endregion: utility
 
 if test ! -z "$*"; then
 	initialize_wineprefix
 
-	WINE_WINDOW=$(LANG=C find -L "$W_DRIVE_C" -maxdepth 1 -iname "windows" -type d | head -1);
-	if test -z "$WINE_WINDOW"; then echo "!! failed to find C:/Windows directory" && exit; fi
+	WINE_WINDOWS=$(LANG=C find -L "$WINE_DRIVE_C" -maxdepth 1 -iname "windows" -type d | head -1);
+	if test -z "$WINE_WINDOWS"; then echo "!! failed to find C:/Windows directory" && exit; fi
 
-	WINE_FONTS=$(LANG=C find -L "$WINE_WINDOW" -maxdepth 1 -iname "fonts" -type d | head -1)
+	WINE_FONTS=$(LANG=C find -L "$WINE_WINDOWS" -maxdepth 1 -iname "fonts" -type d | head -1)
 	if test -z "$WINE_FONTS"; then echo "!! failed to find C:/Windows/Fonts directory" && exit; fi
 
-	WINE_TEMP=$(LANG=C find -L "$WINE_WINDOW" -maxdepth 1 -iname "temp" -type d | head -1)
+	WINE_TEMP=$(LANG=C find -L "$WINE_WINDOWS" -maxdepth 1 -iname "temp" -type d | head -1)
 	if test -z "$WINE_TEMP"; then echo "!! failed to find C:/Windows/Temp directory" && exit; fi
 
+	WINE_SYSTEM32_DLLS=$(LANG=C find -L "$WINE_WINDOWS" -maxdepth 1 -iname "syswow64" -type d | head -1)
+	if test -z "$WINE_SYSTEM32_DLLS"; then echo "!! failed to find C:/Windows/syswow64 directory" && exit; fi
+
+	WINE_SYSTEM64_DLLS=$(LANG=C find -L "$WINE_WINDOWS" -maxdepth 1 -iname "system32" -type d | head -1)
+	if test -z "$WINE_SYSTEM64_DLLS"; then echo "!! failed to find C:/Windows/system32 directory" && exit; fi
+
 	FONTS_REG_PART="$WINE_TEMP/fonts.reg.part"
-	FONT_REPLACEMENTS_PART="$WINE_TEMP/font-replacements.reg.part"
+	FONT_REPLACEMENTS_REG_PART="$WINE_TEMP/font-replacements.reg.part"
+	DLL_OVERRIDE_REG_PART="$WINE_TEMP/dll-overrides.reg.part"
 	WINETRICKS_LOG_TEMP="$WINE_TEMP/winetricks.log"
 
 	for var in "$@"
 	do
 		case "$var" in
+			dxvk) install_dxvk ;;
+			d3dcompiler_43) install_d3dcompiler_43 ;;
+			d3dx9) install_d3dx9 ;;
 			baekmuk) install_baekmuk ;;
 			cjkfonts) install_cjkfonts ;;
 			calibri) install_calibri ;;
