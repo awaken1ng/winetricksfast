@@ -1338,10 +1338,6 @@ is_win64() {
 }
 
 stage_installed() {
-	if test ! -e "$WINETRICKS_LOG_TEMP"; then
-		touch "$WINETRICKS_LOG_TEMP"
-	fi
-
 	echo "$1" >> "$WINETRICKS_LOG_TEMP"
 }
 
@@ -1393,26 +1389,14 @@ download_and_cache() {
 # region: utility/registry
 
 stage_font_registration() {
-	if test ! -e "$FONTS_REG_PART"; then
-		touch "$FONTS_REG_PART"
-	fi
-
 	cat >> "$FONTS_REG_PART"
 }
 
 stage_font_replacement() {
-	if test ! -e "$FONT_REPLACEMENTS_REG_PART"; then
-		touch "$FONT_REPLACEMENTS_REG_PART"
-	fi
-
 	cat >> "$FONT_REPLACEMENTS_REG_PART"
 }
 
 stage_dll_override() {
-	if test ! -e "$DLL_OVERRIDE_REG_PART"; then
-		touch "$DLL_OVERRIDE_REG_PART"
-	fi
-
 	cat >> "$DLL_OVERRIDE_REG_PART"
 }
 
