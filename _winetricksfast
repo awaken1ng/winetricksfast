@@ -1,4 +1,4 @@
-#compdef winetricks-fast
+#compdef winetricksfast
 
 local verbs=(
     'dxvk1101'\
