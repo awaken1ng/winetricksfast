@@ -19,12 +19,18 @@ install_dxvk1101() {
 	tar --ungzip --extract --file "$WINETRICKS_CACHE/dxvk/dxvk-1.10.1.tar.gz" --directory "$WINE_TEMP"
 	rm "$WINE_TEMP/dxvk-1.10.1/setup_dxvk.sh"
 
-	mv "$WINE_TEMP/dxvk-1.10.1/x32/"*.dll "$WINE_SYSTEM32_DLLS"
-	rmdir "$WINE_TEMP/dxvk-1.10.1/x32"
+	mv "$WINE_TEMP/dxvk-1.10.1/x32/d3d9.dll"      "$WINE_SYSTEM32_DLLS"
+	mv "$WINE_TEMP/dxvk-1.10.1/x32/d3d10core.dll" "$WINE_SYSTEM32_DLLS"
+	mv "$WINE_TEMP/dxvk-1.10.1/x32/d3d11.dll"     "$WINE_SYSTEM32_DLLS"
+	mv "$WINE_TEMP/dxvk-1.10.1/x32/dxgi.dll"      "$WINE_SYSTEM32_DLLS"
+	rm -rf "$WINE_TEMP/dxvk-1.10.1/x32"
 
 	if is_win64; then
-		mv "$WINE_TEMP/dxvk-1.10.1/x64/"*.dll "$WINE_SYSTEM64_DLLS"
-		rmdir "$WINE_TEMP/dxvk-1.10.1/x64"
+		mv "$WINE_TEMP/dxvk-1.10.1/x64/d3d9.dll" "$WINE_SYSTEM64_DLLS"
+		mv "$WINE_TEMP/dxvk-1.10.1/x64/d3d10core.dll" "$WINE_SYSTEM64_DLLS"
+		mv "$WINE_TEMP/dxvk-1.10.1/x64/d3d11.dll" "$WINE_SYSTEM64_DLLS"
+		mv "$WINE_TEMP/dxvk-1.10.1/x64/dxgi.dll" "$WINE_SYSTEM64_DLLS"
+		rm -rf "$WINE_TEMP/dxvk-1.10.1/x64"
 	fi
 
 	rmdir "$WINE_TEMP/dxvk-1.10.1"
@@ -34,9 +40,7 @@ install_dxvk1101() {
 
 	stage_dll_override <<-EOF
 	"*d3d9"="native"
-	"*d3d10"="native"
 	"*d3d10core"="native"
-	"*d3d10_1"="native"
 	"*d3d11"="native"
 	"*dxgi"="native"
 	EOF
