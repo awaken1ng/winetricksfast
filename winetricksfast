@@ -26,10 +26,10 @@ install_dxvk1101() {
 	rm -rf "$WINE_TEMP/dxvk-1.10.1/x32"
 
 	if is_win64; then
-		mv "$WINE_TEMP/dxvk-1.10.1/x64/d3d9.dll" "$WINE_SYSTEM64_DLLS"
+		mv "$WINE_TEMP/dxvk-1.10.1/x64/d3d9.dll"      "$WINE_SYSTEM64_DLLS"
 		mv "$WINE_TEMP/dxvk-1.10.1/x64/d3d10core.dll" "$WINE_SYSTEM64_DLLS"
-		mv "$WINE_TEMP/dxvk-1.10.1/x64/d3d11.dll" "$WINE_SYSTEM64_DLLS"
-		mv "$WINE_TEMP/dxvk-1.10.1/x64/dxgi.dll" "$WINE_SYSTEM64_DLLS"
+		mv "$WINE_TEMP/dxvk-1.10.1/x64/d3d11.dll"     "$WINE_SYSTEM64_DLLS"
+		mv "$WINE_TEMP/dxvk-1.10.1/x64/dxgi.dll"      "$WINE_SYSTEM64_DLLS"
 		rm -rf "$WINE_TEMP/dxvk-1.10.1/x64"
 	fi
 
